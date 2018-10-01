@@ -33,4 +33,44 @@ public class ProtoConfig {
      * 为每个message生成id时的起始id
      * */
     private short initId;
+
+    public String getSrcPath() {
+        return srcPath;
+    }
+
+    public void setSrcPath(String srcPath) {
+        this.srcPath = srcPath;
+    }
+
+    public String[] getIncludeFiles() {
+        return includeFiles;
+    }
+
+    public void setIncludeFiles(String[] includeFiles) {
+        this.includeFiles = includeFiles;
+    }
+
+    public String[] getExcludedFiles() {
+        return excludedFiles;
+    }
+
+    public void setExcludedFiles(String[] excludedFiles) {
+        this.excludedFiles = excludedFiles;
+    }
+
+    public String[] getFilesOfGenerateId() {
+        return filesOfGenerateId;
+    }
+
+    public void setFilesOfGenerateId(String[] filesOfGenerateId) {
+        this.filesOfGenerateId = filesOfGenerateId;
+    }
+
+    public short getInitId() {
+        return initId;
+    }
+
+    public void setInitId(short initId) {
+        this.initId = initId;
+    }
 }
