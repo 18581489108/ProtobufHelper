@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "Example.proto";
+
+package example;
+option java_package = "cn.kurisu9.example";
+
+message TestMessage {
+    Message msg = 1;
+}
+
+  
