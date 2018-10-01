@@ -1,15 +1,20 @@
 package cn.kurisu9;
 
 import cn.kurisu9.config.Config;
+import cn.kurisu9.config.ProtoConfig;
 import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
 import cn.kurisu9.utils.process.ProcessUtils;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import static cn.kurisu9.GlobalSetting.*;
 
@@ -41,25 +46,43 @@ public class App {
         String content = FileUtils.readFileToString(configFile, FILE_ENCODING);
         Config config = JSON.parseObject(content, Config.class);
 
-        System.out.println(config.getProtocFile());
         spawnDescFile(config);
+        //loadProtoFiles(config.getProtoConfig());
+    }
+
+    /**
+     * 获取指定的proto文件
+     * */
+    private static List<String> loadProtoFiles(ProtoConfig protoConfig) {
+       // Path srcPath = protoConfig.getSrcPath();
+        //System.out.println(srcPath.toAbsolutePath());
+
+        return null;
     }
 
     /**
      * 生成描述文件
      * */
     private static void spawnDescFile(Config config) {
-        String cmd = ".\\tools\\protoc3.5.1.exe -I=C:\\Users\\zhaoxin_m\\Desktop\\protobuf\\test\\ --descriptor_set_out=./build/desc/example.desc Example.proto";
 
-        Command command = new Command(".\\tools\\protoc3.5.1.exe");
-        command.addParam("-I=C:\\Users\\zhaoxin_m\\Desktop\\protobuf\\test\\");
-        command.addParam("--descriptor_set_out=./build/desc/example.desc");
-        command.addParam("Example.proto");
+        String protocFile = Paths.get(config.getProtocFile()).toAbsolutePath().toString();
+        String srcPath = Paths.get(config.getProtoConfig().getSrcPath()).toAbsolutePath().toString();
+        Path descRootPath = Paths.get(config.getTempRootPath()).resolve(config.getDescOutPath());
 
-        ExecResult result = ProcessUtils.exec(command);
+        String[] filesOfGenerateId = config.getProtoConfig().getFilesOfGenerateId();
+        for (String file : filesOfGenerateId) {
+            Command command = new Command(protocFile);
+            command.addParam("-I=" + srcPath);
+            command.addParam("--descriptor_set_out=" + descRootPath.resolve(FilenameUtils.getBaseName(file) +".desc").toAbsolutePath().toString());
+            command.addParam(file);
 
-        System.out.println(result.isSuccess());
-        System.out.println(result.getOut());
+            ExecResult result = ProcessUtils.exec(command);
+
+            System.out.println(file + ": " + result.isSuccess());
+            System.out.println(result.getOut());
+        }
+
+
     }
 }
 
