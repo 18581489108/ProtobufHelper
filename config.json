@@ -1,10 +1,15 @@
 {
-   "protoConfig": {
 
-   },
+  "protocFile": "./tools/protoc3.5.1.exe",
 
-   "outConfig": {
+  "tempRootPath": "./build",
 
+  "descOutPath": "desc",
 
-   }
+  "protoConfig": {
+
+  },
+
+  "outConfigs": []
+
 }
