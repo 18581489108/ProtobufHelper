@@ -1,4 +1,4 @@
-package cn.kurisu9.spawner;
+package cn.kurisu9.data;
 
 /**
  * @author zhaoxin_m
@@ -6,6 +6,10 @@ package cn.kurisu9.spawner;
  * @date 2018/10/2 14:38
  **/
 public class Result {
+    public static final Result DEFAULT_SUCCESS = new Result(true);
+
+    public static final Result DEFAULT_FAILED = new Result(false);
+
     /**
      * 是否成功
      * */
@@ -46,5 +50,14 @@ public class Result {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+
+    public static Result forFailed(String message) {
+        return new Result(false, message);
+    }
+
+    public static Result forSuccess(String message) {
+        return new Result(true, message);
     }
 }
