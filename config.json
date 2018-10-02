@@ -4,7 +4,7 @@
 
   "tempRootPath": "./build",
 
-  "descOutPath": "desc",
+  "descOutPath": "desc/global.desc",
 
   "protoConfig": {
     "srcPath": "./example/",
