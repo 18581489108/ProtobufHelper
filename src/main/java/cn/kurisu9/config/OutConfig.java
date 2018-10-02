@@ -22,14 +22,16 @@ public class OutConfig {
     private String finalPath;
 
     /**
-     * 在输出前是否清除最终目录
-     * */
-    private String clearFlag;
-
-    /**
      * 是否生成id文件
      * */
-    private String idFileFlag;
+    private boolean idFileFlag;
+
+    /**
+     * id文件的路径
+     *
+     * 与输出的代码文件在同一个根目录下
+     * */
+    private String idFilePath;
 
     public String getType() {
         return type;
@@ -55,19 +57,19 @@ public class OutConfig {
         this.finalPath = finalPath;
     }
 
-    public String getClearFlag() {
-        return clearFlag;
-    }
-
-    public void setClearFlag(String clearFlag) {
-        this.clearFlag = clearFlag;
-    }
-
-    public String getIdFileFlag() {
+    public boolean getIdFileFlag() {
         return idFileFlag;
     }
 
-    public void setIdFileFlag(String idFileFlag) {
+    public void setIdFileFlag(boolean idFileFlag) {
         this.idFileFlag = idFileFlag;
+    }
+
+    public String getIdFilePath() {
+        return idFilePath;
+    }
+
+    public void setIdFilePath(String idFilePath) {
+        this.idFilePath = idFilePath;
     }
 }
