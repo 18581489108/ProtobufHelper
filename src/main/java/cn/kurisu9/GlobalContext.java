@@ -34,6 +34,11 @@ public class GlobalContext {
     private Path protoSrcPath;
 
     /**
+     * 描述文件输出目录
+     * */
+    private Path descOutPath;
+
+    /**
      * 要处理的proto文件列表，这里仅需文件名即可
      * */
     private List<String> protoFiles;
@@ -94,6 +99,15 @@ public class GlobalContext {
     public void setProtoFiles(List<String> protoFiles) {
         this.protoFiles = protoFiles;
     }
+
+    public Path getDescOutPath() {
+        return descOutPath;
+    }
+
+    public void setDescOutPath(Path descOutPath) {
+        this.descOutPath = descOutPath;
+    }
+
     //endregion
 
 }

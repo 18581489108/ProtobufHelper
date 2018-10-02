@@ -3,7 +3,9 @@ package cn.kurisu9;
 import cn.kurisu9.config.Config;
 import cn.kurisu9.config.OutConfig;
 import cn.kurisu9.config.ProtoConfig;
-import cn.kurisu9.spawner.Result;
+import cn.kurisu9.data.KeyValue;
+import cn.kurisu9.data.Result;
+import cn.kurisu9.desc.DescFileParser;
 import cn.kurisu9.spawner.Spawners;
 import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
@@ -30,6 +32,10 @@ import static cn.kurisu9.utils.FilePathUtils.*;
  *
  */
 public class App {
+    @FunctionalInterface
+    private interface Task {
+        Result execute(GlobalContext context);
+    }
 
     /**
      * 启动参数
@@ -38,6 +44,76 @@ public class App {
      *
      * */
     public static void main(String[] args) throws Exception {
+        GlobalContext context = createContext(readConfig(args));
+
+        List<KeyValue<String, Task>> tasks = initTasks();
+
+        for (KeyValue<String, Task> kv : tasks) {
+            Task task = kv.getValue();
+            Result result = task.execute(context);
+            if (result.isSuccess()) {
+                continue;
+            }
+
+            System.out.println(kv.getKey() + " Failed!");
+            System.out.println("The following is the error message:");
+            System.out.println(result.getMessage());
+            System.exit(1);
+        }
+
+    }
+
+    private static List<KeyValue<String, Task>> initTasks() {
+        List<KeyValue<String, Task>> tasks = new ArrayList<>();
+
+        // TODO 清理临时目录
+        tasks.add(KeyValue.of("Clear temp dic", (GlobalContext context) -> {
+            return Result.DEFAULT_SUCCESS;
+        }));
+
+        // 解析描述文件
+        tasks.add(KeyValue.of("Desc file parser", (GlobalContext context) -> {
+            DescFileParser descFileParser = new DescFileParser(context);
+            Result result = descFileParser.parse();
+            if (result.isFailed()) {
+                return result;
+            }
+
+            return Result.DEFAULT_SUCCESS;
+        }));
+
+        // 生成代码文件到临时目录
+        tasks.add(KeyValue.of("Spawn code File", (GlobalContext context) -> {
+            OutConfig[] outConfigs = context.getConfig().getOutConfigs();
+
+            for (OutConfig outConfig : outConfigs) {
+                Result result = Spawners.spawn(context, outConfig);
+                if (result.isFailed()) {
+                    return result;
+                }
+            }
+
+            return Result.DEFAULT_SUCCESS;
+        }));
+
+        // TODO 移动文件到最终目录
+        tasks.add(KeyValue.of("Move file to final Dic", (GlobalContext context) -> {
+            return Result.DEFAULT_SUCCESS;
+        }));
+
+        // 输出所有任务都执行成功
+        tasks.add(KeyValue.of("Tell you success", (GlobalContext context) -> {
+            System.out.println("All task Success!!!");
+            return Result.DEFAULT_SUCCESS;
+        }));
+
+        return tasks;
+    }
+
+    /**
+     * 读取配置
+     * */
+    private static Config readConfig(String[] args) throws IOException {
         String configPath;
         if (args != null && args.length > 0) {
             configPath = args[0];
@@ -51,13 +127,7 @@ public class App {
         }
 
         String content = FileUtils.readFileToString(configFile, FILE_ENCODING);
-        Config config = JSON.parseObject(content, Config.class);
-
-        GlobalContext context = createContext(config);
-        //spawnDescFile(config);
-        //loadProtoFiles(config.getProtoConfig());
-
-        spawnFiles(context);
+        return JSON.parseObject(content, Config.class);
     }
 
     /**
@@ -77,6 +147,9 @@ public class App {
         Path tempRootPath = Paths.get(config.getTempRootPath());
         checkPath("temp root path", tempRootPath);
         context.setTempRootPath(tempRootPath);
+
+        Path descOutPath = tempRootPath.resolve(config.getDescOutPath());
+        context.setDescOutPath(descOutPath);
 
         return context;
     }
@@ -129,50 +202,7 @@ public class App {
         context.setProtoFiles(new ArrayList<>(protoFiles));
     }
 
-    /**
-     * 生成描述文件
-     * */
-    private static void spawnDescFile(Config config) {
 
-        String protocFile = Paths.get(config.getProtocFile()).toAbsolutePath().toString();
-        String srcPath = Paths.get(config.getProtoConfig().getSrcPath()).toAbsolutePath().toString();
-        Path descRootPath = Paths.get(config.getTempRootPath()).resolve(config.getDescOutPath());
-
-        String[] filesOfGenerateId = config.getProtoConfig().getFilesOfGenerateId();
-        for (String file : filesOfGenerateId) {
-            Command command = new Command(protocFile);
-            command.addParam("-I=" + srcPath);
-            command.addParam("--descriptor_set_out=" + descRootPath.resolve(FilenameUtils.getBaseName(file) +".desc").toAbsolutePath().toString());
-            command.addParam(file);
-
-            ExecResult result = ProcessUtils.exec(command);
-
-            System.out.println(file + ": " + result.isSuccess());
-            System.out.println(result.getOut());
-        }
-
-
-    }
-
-
-    /**
-     * 生成文件
-     * */
-    private static void spawnFiles(GlobalContext context) {
-        OutConfig[] outConfigs = context.getConfig().getOutConfigs();
-
-        for (OutConfig outConfig : outConfigs) {
-            Result result = Spawners.spawn(context, outConfig);
-            if (result.isFailed()) {
-                System.out.println("Spawn Failed! When spawn " + outConfig.getType() + " type");
-                System.out.println("The following is the error message:");
-                System.out.println(result.getMessage());
-                return;
-            }
-        }
-
-        System.out.println("Spawn Success!!!");
-    }
 }
 
 
