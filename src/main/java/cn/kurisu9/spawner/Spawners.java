@@ -2,6 +2,7 @@ package cn.kurisu9.spawner;
 
 import cn.kurisu9.GlobalContext;
 import cn.kurisu9.config.OutConfig;
+import cn.kurisu9.data.Result;
 
 import java.util.HashMap;
 import java.util.Map;

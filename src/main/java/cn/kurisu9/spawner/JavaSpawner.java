@@ -1,6 +1,7 @@
 package cn.kurisu9.spawner;
 
 import cn.kurisu9.GlobalContext;
+import cn.kurisu9.data.Result;
 import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
 import cn.kurisu9.utils.process.ProcessUtils;
@@ -43,7 +44,7 @@ public class JavaSpawner extends AbstractSpawner {
                 continue;
             }
 
-            return new Result(false, result.getOut());
+            return Result.forFailed(result.getOut());
         }
 
         return DEFAULT_SUCCESS_RESULT;

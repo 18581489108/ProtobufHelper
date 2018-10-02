@@ -2,6 +2,7 @@ package cn.kurisu9.spawner;
 
 import cn.kurisu9.GlobalContext;
 import cn.kurisu9.config.OutConfig;
+import cn.kurisu9.data.Result;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.nio.file.Path;
  * @date 2018/10/2 13:55
  **/
 public abstract class AbstractSpawner implements Spawner {
-    protected static final Result DEFAULT_SUCCESS_RESULT = new Result(true);
+    protected static final Result DEFAULT_SUCCESS_RESULT = Result.DEFAULT_SUCCESS;
 
     /**
      * 支持的类型
@@ -110,7 +111,7 @@ public abstract class AbstractSpawner implements Spawner {
                 Files.createDirectories(tempPath);
             } catch (IOException e) {
                 e.printStackTrace();
-                return new Result(false, e.getMessage());
+                return Result.forFailed(e.getMessage());
             }
         }
 
