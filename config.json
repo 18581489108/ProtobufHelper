@@ -14,6 +14,14 @@
     "initId": 1001
   },
 
-  "outConfigs": []
+  "outConfigs": [
+    {
+      "type": "java",
+      "tempPath": "java",
+      "finalPath": "",
+      "idFileFlag": true,
+      "idFilePath": ""
+    }
+  ]
 
 }
