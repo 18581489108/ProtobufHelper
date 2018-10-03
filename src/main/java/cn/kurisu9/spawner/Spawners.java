@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 封装了现在已有的生成器，并提供对外统一接口
  * @date 2018/10/2 15:34
  **/

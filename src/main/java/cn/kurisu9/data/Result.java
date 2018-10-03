@@ -1,7 +1,7 @@
 package cn.kurisu9.data;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 代码生成的结果
  * @date 2018/10/2 14:38
  **/

@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 文件路径工具类
  * @date 2018/10/2 14:24
  **/

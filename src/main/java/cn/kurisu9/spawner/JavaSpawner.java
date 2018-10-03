@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description java代码生成器
  * @date 2018/10/2 15:26
  **/

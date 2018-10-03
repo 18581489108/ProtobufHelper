@@ -1,7 +1,7 @@
 package cn.kurisu9.exception;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 路径不是一个目录异常
  * @date 2018/10/2 12:28
  **/

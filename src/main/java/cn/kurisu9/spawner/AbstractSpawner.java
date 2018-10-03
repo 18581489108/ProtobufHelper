@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 定义一些子类都会使用的方法
  * @date 2018/10/2 13:55
  **/

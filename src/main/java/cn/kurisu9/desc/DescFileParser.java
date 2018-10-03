@@ -1,6 +1,7 @@
 package cn.kurisu9.desc;
 
 import cn.kurisu9.GlobalContext;
+import cn.kurisu9.data.ProtoFileData;
 import cn.kurisu9.data.Result;
 import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
@@ -10,11 +11,12 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.List;
 
 import static cn.kurisu9.GlobalSetting.DESC_EXTENSION;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 描述文件解析
  * @date 2018/10/2 18:56
  **/
@@ -85,7 +87,16 @@ public class DescFileParser {
 
             // TODO 如何解析proto文件
             for (DescriptorProtos.FileDescriptorProto fileDescriptorProto : fdSet.getFileList()) {
-                System.out.println(fileDescriptorProto.getName());
+                ProtoFileData data = new ProtoFileData();
+                data.setFileName(fileDescriptorProto.getName());
+                data.setFileOptions(fileDescriptorProto.getOptions());
+
+                List<DescriptorProtos.DescriptorProto> messages = fileDescriptorProto.getMessageTypeList();
+
+                for (DescriptorProtos.DescriptorProto msg : messages) {
+                    System.out.println(msg.getName());
+                }
+                System.out.println();
             }
         } catch (IOException e) {
             return Result.forFailed(e.getMessage());

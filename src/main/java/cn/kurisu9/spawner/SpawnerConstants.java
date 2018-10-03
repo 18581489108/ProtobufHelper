@@ -1,7 +1,7 @@
 package cn.kurisu9.spawner;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 定义生成器使用的一些常量
  * @date 2018/10/2 15:22
  **/

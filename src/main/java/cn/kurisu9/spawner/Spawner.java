@@ -5,7 +5,7 @@ import cn.kurisu9.config.OutConfig;
 import cn.kurisu9.data.Result;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 生成目标代码的顶层接口
  * @date 2018/10/2 13:44
  **/

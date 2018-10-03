@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  **/
 public class Test {
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("C:\\Users\\zhaoxin_m\\Desktop\\protobuf\\test\\protoc3.5.1.exe");
+        Path path = Paths.get("C:\\Users\\kurisu9\\Desktop\\protobuf\\test\\protoc3.5.1.exe");
         System.out.println(Files.isDirectory(path));
     }
 }
