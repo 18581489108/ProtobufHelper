@@ -1,7 +1,7 @@
 package cn.kurisu9.config;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description id文件配置
  * @date 2018/10/4 11:30
  **/

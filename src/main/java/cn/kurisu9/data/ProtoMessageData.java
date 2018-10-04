@@ -1,7 +1,7 @@
 package cn.kurisu9.data;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 协议数据
  * @date 2018/10/4 11:19
  **/
