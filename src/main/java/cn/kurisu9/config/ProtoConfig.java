@@ -25,14 +25,9 @@ public class ProtoConfig {
     private String[] excludedFiles;
 
     /**
-     * 指定需要生成id的文件
+     * id文件配置
      * */
-    private String[] filesOfGenerateId;
-
-    /**
-     * 为每个message生成id时的起始id
-     * */
-    private short initId;
+    private IdFileConfig[] idFileConfigs;
 
     public String getSrcPath() {
         return srcPath;
@@ -58,19 +53,11 @@ public class ProtoConfig {
         this.excludedFiles = excludedFiles;
     }
 
-    public String[] getFilesOfGenerateId() {
-        return filesOfGenerateId;
+    public IdFileConfig[] getIdFileConfigs() {
+        return idFileConfigs;
     }
 
-    public void setFilesOfGenerateId(String[] filesOfGenerateId) {
-        this.filesOfGenerateId = filesOfGenerateId;
-    }
-
-    public short getInitId() {
-        return initId;
-    }
-
-    public void setInitId(short initId) {
-        this.initId = initId;
+    public void setIdFileConfigs(IdFileConfig[] idFileConfigs) {
+        this.idFileConfigs = idFileConfigs;
     }
 }

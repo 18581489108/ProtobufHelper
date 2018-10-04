@@ -10,8 +10,16 @@
     "srcPath": "./example/",
     "includeFiles": ["Example.proto", "Example2.proto"],
     "excludedFiles": [],
-    "filesOfGenerateId": ["Example.proto", "Example2.proto"],
-    "initId": 1001
+    "idFileConfigs": [
+      {
+        "targetFile": "Example.proto",
+        "initId": 1001
+      },
+      {
+        "targetFile": "Example2.proto",
+        "initId": 2001
+      }
+    ]
   },
 
   "outConfigs": [
