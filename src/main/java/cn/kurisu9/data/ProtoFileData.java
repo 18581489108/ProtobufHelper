@@ -2,6 +2,8 @@ package cn.kurisu9.data;
 
 import com.google.protobuf.DescriptorProtos;
 
+import java.util.List;
+
 /**
  * @author kurisu9
  * @description Proto文件数据
@@ -19,6 +21,11 @@ public class ProtoFileData {
      * */
     private DescriptorProtos.FileOptions fileOptions;
 
+    /**
+     * 该proto文件中所有的message定义
+     * */
+    private List<ProtoMessageData> messages;
+
     public String getFileName() {
         return fileName;
     }
@@ -33,5 +40,13 @@ public class ProtoFileData {
 
     public void setFileOptions(DescriptorProtos.FileOptions fileOptions) {
         this.fileOptions = fileOptions;
+    }
+
+    public List<ProtoMessageData> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<ProtoMessageData> messages) {
+        this.messages = messages;
     }
 }

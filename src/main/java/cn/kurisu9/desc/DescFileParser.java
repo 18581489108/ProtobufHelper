@@ -1,19 +1,19 @@
 package cn.kurisu9.desc;
 
 import cn.kurisu9.GlobalContext;
+import cn.kurisu9.config.IdFileConfig;
 import cn.kurisu9.data.ProtoFileData;
+import cn.kurisu9.data.ProtoMessageData;
 import cn.kurisu9.data.Result;
 import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
 import cn.kurisu9.utils.process.ProcessUtils;
 import com.google.protobuf.DescriptorProtos;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
-
-import static cn.kurisu9.GlobalSetting.DESC_EXTENSION;
 
 /**
  * @author kurisu9
@@ -63,9 +63,10 @@ public class DescFileParser {
         Command command = new Command(protocFile);
         command.addParam("-I=" + protoSrcPath);
         command.addParam("--descriptor_set_out=" + descOutPath.toAbsolutePath().toString());
-        String[] filesOfGenerateId = context.getConfig().getProtoConfig().getFilesOfGenerateId();
-        for (String file : filesOfGenerateId) {
-            command.addParam(file);
+
+        IdFileConfig[] idFileConfigs = context.getConfig().getProtoConfig().getIdFileConfigs();
+        for (IdFileConfig idFileConfig : idFileConfigs) {
+            command.addParam(idFileConfig.getTargetFile());
         }
 
         ExecResult result = ProcessUtils.exec(command);
@@ -85,25 +86,54 @@ public class DescFileParser {
             DescriptorProtos.FileDescriptorSet fdSet = DescriptorProtos.FileDescriptorSet
                     .parseFrom(Files.newInputStream(context.getDescOutPath().toAbsolutePath(), StandardOpenOption.READ));
 
-            // TODO 如何解析proto文件
+            List<ProtoFileData> protoFileDataList = new ArrayList<>();
             for (DescriptorProtos.FileDescriptorProto fileDescriptorProto : fdSet.getFileList()) {
-                ProtoFileData data = new ProtoFileData();
-                data.setFileName(fileDescriptorProto.getName());
-                data.setFileOptions(fileDescriptorProto.getOptions());
+                ProtoFileData fileData = new ProtoFileData();
+                String fileName = fileDescriptorProto.getName();
+                fileData.setFileName(fileName);
+                fileData.setFileOptions(fileDescriptorProto.getOptions());
 
-                List<DescriptorProtos.DescriptorProto> messages = fileDescriptorProto.getMessageTypeList();
-
-                for (DescriptorProtos.DescriptorProto msg : messages) {
-                    System.out.println(msg.getName());
+                short msgId = findInitId(fileName);
+                if (msgId < 0) {
+                    return Result.forFailed(fileName + " don't set initId");
                 }
-                System.out.println();
+                List<DescriptorProtos.DescriptorProto> messages = fileDescriptorProto.getMessageTypeList();
+                List<ProtoMessageData> messageDataList = new ArrayList<>(messages.size());
+                for (DescriptorProtos.DescriptorProto msg : messages) {
+                    ProtoMessageData messageData = new ProtoMessageData();
+                    messageData.setName(msg.getName());
+                    messageData.setId(msgId++);
+                    // TODO 如何解析message上的注释
+                    //messageData.setComment(msg.);
+
+                    messageDataList.add(messageData);
+                }
+                fileData.setMessages(messageDataList);
+
+                protoFileDataList.add(fileData);
             }
+
+            context.setIdFileDataList(protoFileDataList);
         } catch (IOException e) {
             return Result.forFailed(e.getMessage());
         }
 
 
         return Result.DEFAULT_SUCCESS;
+    }
+
+    /**
+     * 根据proto文件名找到对应的起始id
+     * */
+    private short findInitId(String fileName) {
+        IdFileConfig[] idFileConfigs = context.getConfig().getProtoConfig().getIdFileConfigs();
+        for (IdFileConfig idFileConfig : idFileConfigs) {
+            if (idFileConfig.getTargetFile().equals(fileName)) {
+                return idFileConfig.getInitId();
+            }
+        }
+
+        return -1;
     }
 }
 

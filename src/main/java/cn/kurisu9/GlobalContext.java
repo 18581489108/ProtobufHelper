@@ -1,6 +1,7 @@
 package cn.kurisu9;
 
 import cn.kurisu9.config.Config;
+import cn.kurisu9.data.ProtoFileData;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -50,6 +51,11 @@ public class GlobalContext {
      * value: Path 生成器输出文件的临时目录
      * */
     private Map<String, Path> tempPaths = new HashMap<>();
+
+    /**
+     * id文件相关数据
+     * */
+    private List<ProtoFileData> idFileDataList;
 
     public void addTempPath(String key, Path tempPath) {
         tempPaths.put(key, tempPath);
@@ -106,6 +112,14 @@ public class GlobalContext {
 
     public void setDescOutPath(Path descOutPath) {
         this.descOutPath = descOutPath;
+    }
+
+    public List<ProtoFileData> getIdFileDataList() {
+        return idFileDataList;
+    }
+
+    public void setIdFileDataList(List<ProtoFileData> idFileDataList) {
+        this.idFileDataList = idFileDataList;
     }
 
     //endregion
