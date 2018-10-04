@@ -61,7 +61,7 @@ public abstract class AbstractSpawner implements Spawner {
         }
         context.addTempPath(outConfig.getType(), tempPath);
 
-        Result spawnFileResult = spawnFileToTempPath(context, tempPath);
+        Result spawnFileResult = spawnFileToTempPath(context, outConfig, tempPath);
         if (spawnFileResult.isFailed()) {
             return spawnFileResult;
         }
@@ -75,10 +75,9 @@ public abstract class AbstractSpawner implements Spawner {
                 return createIdFileTempPathResult;
             }
 
-            // TODO 生成proto文件的描述文件
-            Result spwanIdFileResult = spawnIdFileToTempPath(context, idFilePath);
-            if (spawnFileResult.isFailed()) {
-                return spawnFileResult;
+            Result spawnIdFileResult = spawnIdFileToTempPath(context, outConfig, idFilePath);
+            if (spawnIdFileResult.isFailed()) {
+                return spawnIdFileResult;
             }
         }
 
@@ -91,7 +90,7 @@ public abstract class AbstractSpawner implements Spawner {
      * @param context 全局上下文
      * @param tempPath 代码文件的临时根目录
      * */
-    protected abstract Result spawnFileToTempPath(GlobalContext context, Path tempPath);
+    protected abstract Result spawnFileToTempPath(GlobalContext context, OutConfig outConfig, Path tempPath);
 
     /**
      * 生成id文件到临时目录
@@ -99,7 +98,7 @@ public abstract class AbstractSpawner implements Spawner {
      * @param context 全局上下文
      * @param idFilePath id文件的临时路径
      * */
-    protected abstract Result spawnIdFileToTempPath(GlobalContext context, Path idFilePath);
+    protected abstract Result spawnIdFileToTempPath(GlobalContext context, OutConfig outConfig, Path idFilePath);
 
     /**
      * 创建临时目录，如果目录已存在，则直接返回true
