@@ -7,9 +7,7 @@ import cn.kurisu9.data.KeyValue;
 import cn.kurisu9.data.Result;
 import cn.kurisu9.desc.DescFileParser;
 import cn.kurisu9.spawner.Spawners;
-import cn.kurisu9.utils.process.Command;
-import cn.kurisu9.utils.process.ExecResult;
-import cn.kurisu9.utils.process.ProcessUtils;
+import cn.kurisu9.utils.FreemarkerUtil;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -66,8 +64,24 @@ public class App {
     private static List<KeyValue<String, Task>> initTasks() {
         List<KeyValue<String, Task>> tasks = new ArrayList<>();
 
-        // TODO 清理临时目录
+        // 清理临时目录
         tasks.add(KeyValue.of("Clear temp dic", (GlobalContext context) -> {
+            Path tempRootDir = context.getTempRootDir();
+            try {
+                FileUtils.cleanDirectory(tempRootDir.toFile());
+                return Result.DEFAULT_SUCCESS;
+            } catch (IOException e) {
+                return Result.forFailed(e.getMessage());
+            }
+        }));
+
+        // 初始化FreemarkerUtil
+        tasks.add(KeyValue.of("Init FreemarkerUtil", (GlobalContext context) -> {
+            Result result = FreemarkerUtil.getInstance().init(context.getTemplateDir());
+            if (result.isFailed()) {
+                return result;
+            }
+
             return Result.DEFAULT_SUCCESS;
         }));
 
@@ -97,8 +111,22 @@ public class App {
         }));
 
         // TODO 移动文件到最终目录
-        tasks.add(KeyValue.of("Move file to final Dic", (GlobalContext context) -> {
-            return Result.DEFAULT_SUCCESS;
+        tasks.add(KeyValue.of("Move file to Final Dic", (GlobalContext context) -> {
+            OutConfig[] outConfigs = context.getConfig().getOutConfigs();
+
+            try {
+                for (OutConfig outConfig : outConfigs) {
+                    Path tempDir = context.getTempDir(outConfig.getType()).toAbsolutePath();
+                    Path finalDir = context.getFinalDir(outConfig.getType()).toAbsolutePath();
+
+                    FileUtils.copyDirectory(tempDir.toFile(), finalDir.toFile());
+                }
+
+                return Result.DEFAULT_SUCCESS;
+            } catch (IOException e) {
+                return Result.forFailed(e.toString());
+            }
+
         }));
 
         // 输出所有任务都执行成功
@@ -144,24 +172,41 @@ public class App {
         checkFilePath("protoc", protocFile);
         context.setProtocFile(protocFile);
 
-        Path tempRootPath = Paths.get(config.getTempRootPath());
+        Path tempRootPath = Paths.get(config.getTempRootDir());
         checkPath("temp root path", tempRootPath);
-        context.setTempRootPath(tempRootPath);
+        context.setTempRootDir(tempRootPath);
 
         Path descOutPath = tempRootPath.resolve(config.getDescOutPath());
         context.setDescOutPath(descOutPath);
 
+        Path templateDir = Paths.get(config.getTemplateDir());
+        checkPath("Template Dir", templateDir);
+        context.setTemplateDir(templateDir);
+
+        addFinalDirsToContext(context, config.getOutConfigs());
+
         return context;
+    }
+
+    /**
+     * 将输出的最终目录添加到全局上下文
+     * */
+    private static void addFinalDirsToContext(GlobalContext context, OutConfig[] outConfigs) {
+        for (OutConfig outConfig : outConfigs) {
+            Path finalDir = Paths.get(outConfig.getFinalDir());
+            checkPath(outConfig.getType() + " Final Dir", finalDir);
+            context.addFinalDir(outConfig.getType(), finalDir);
+        }
     }
 
     /**
      * 在上下文添加proto文件相关的配置
      * */
     private static void addProtoConfigToContext(GlobalContext context, ProtoConfig protoConfig) {
-        Path protoSrcPath = Paths.get(protoConfig.getSrcPath());
+        Path protoSrcPath = Paths.get(protoConfig.getSrcDir());
         checkDirectoryPath("Proto src path", protoSrcPath);
 
-        context.setProtoSrcPath(protoSrcPath);
+        context.setProtoSrcDir(protoSrcPath);
 
         // 获取需要解析的proto文件
         Set<String> protoFiles = new HashSet<>();
