@@ -3,18 +3,30 @@ package cn.kurisu9.spawner;
 import cn.kurisu9.GlobalContext;
 import cn.kurisu9.GlobalSetting;
 import cn.kurisu9.config.OutConfig;
+import cn.kurisu9.data.KeyValue;
+import cn.kurisu9.data.ProtoFileData;
+import cn.kurisu9.data.ProtoMessageData;
 import cn.kurisu9.data.Result;
+import cn.kurisu9.data.javaa.PacketIdFileInfo;
+import cn.kurisu9.utils.FreemarkerUtil;
+import cn.kurisu9.utils.StringExpandUtils;
 import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
 import cn.kurisu9.utils.process.ProcessUtils;
-import com.sun.org.apache.regexp.internal.RE;
+import com.google.protobuf.DescriptorProtos;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static cn.kurisu9.utils.CodeSpawnUtils.*;
 
@@ -37,7 +49,7 @@ public class JavaSpawner extends AbstractSpawner {
     @Override
     protected Result spawnFileToTempPath(GlobalContext context, OutConfig outConfig, Path tempPath) {
         String protocFile = context.getProtocFile().toAbsolutePath().toString();
-        String srcPath = context.getProtoSrcPath().toAbsolutePath().toString();
+        String srcPath = context.getProtoSrcDir().toAbsolutePath().toString();
         String javaOutPath = tempPath.toString();
 
         List<String> protoFiles = context.getProtoFiles();
@@ -67,11 +79,32 @@ public class JavaSpawner extends AbstractSpawner {
      */
     @Override
     protected Result spawnIdFileToTempPath(GlobalContext context, OutConfig outConfig, Path idFilePath) {
-        String codeContent = createJavaCode(context, outConfig, idFilePath);
-        try {
-            FileUtils.write(idFilePath.toFile(), codeContent, GlobalSetting.FILE_ENCODING);
-        } catch (IOException e) {
-            return Result.forFailed(e.getMessage());
+        PacketIdFileInfo packetIdFileInfo = new PacketIdFileInfo();
+        packetIdFileInfo.setPackageName(getIdClassPackage(outConfig.getIdFilePath()));
+        packetIdFileInfo.setClassName(getIdClassName(outConfig.getIdFilePath()));
+
+        List<ProtoFileData> fileDataList = context.getIdFileDataList();
+
+        List<KeyValue<String, List<ProtoMessageData>>> allMessages = new ArrayList<>();
+        Set<String> imports = new HashSet<>();
+        for (ProtoFileData fileData : fileDataList) {
+            DescriptorProtos.FileOptions fileOptions = fileData.getFileOptions();
+
+            String javaOuterClassname = getJavaOuterClassname(fileData.getFileName(), fileOptions);
+            String fullClassName = fileOptions.getJavaPackage() + "." + javaOuterClassname;
+
+            imports.add(fullClassName);
+
+            allMessages.add(KeyValue.of(javaOuterClassname, fileData.getMessages()));
+
+        }
+
+        packetIdFileInfo.setImportClasses(imports);
+        packetIdFileInfo.setAllMessages(allMessages);
+
+        Result result = FreemarkerUtil.getInstance().processTemplate(outConfig.getIdFileTemplate(), packetIdFileInfo, idFilePath);
+        if (result.isFailed()) {
+            return result;
         }
 
         return Result.DEFAULT_SUCCESS;
@@ -84,7 +117,8 @@ public class JavaSpawner extends AbstractSpawner {
         StringBuilder packageName = new StringBuilder();
         Path path = Paths.get(idFilePath);
 
-        int nameCount = path.getNameCount();
+        // 不需要最后的类名
+        int nameCount = path.getNameCount() - 1;
         for (int i = 0; i < nameCount; i++) {
             packageName.append(path.getName(i));
             if (i < nameCount - 1) {
@@ -98,22 +132,15 @@ public class JavaSpawner extends AbstractSpawner {
         return FilenameUtils.getBaseName(idFilePath);
     }
 
-    private String createJavaCode(GlobalContext context, OutConfig outConfig, Path idFilePath) {
-        StringBuilder code = new StringBuilder();
-
-        // 包名
-        code.append("package");
-        appendSpace(code);
-        code.append(getIdClassPackage(outConfig.getIdFilePath()));
-        appendLineEnd(code);
-
-        // 引入message所在的包
-
-
-        return code.toString();
+    /**
+     * 获取proto文件生成时的外部类名称
+     * */
+    private String getJavaOuterClassname(String fileName, DescriptorProtos.FileOptions fileOptions) {
+        if (!StringUtils.isEmpty(fileOptions.getJavaOuterClassname())) {
+            return fileOptions.getJavaOuterClassname();
+        }
+        return StringExpandUtils.toUpperFirst(FilenameUtils.getBaseName(fileName));
     }
-
-
 }
 
 

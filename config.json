@@ -2,21 +2,23 @@
 
   "protocFile": "./tools/protoc3.5.1.exe",
 
-  "tempRootPath": "./build",
+  "templateDir": "./templates",
+
+  "tempRootDir": "./build",
 
   "descOutPath": "desc/global.desc",
 
   "protoConfig": {
-    "srcPath": "./example/",
-    "includeFiles": ["Example.proto", "Example2.proto"],
+    "srcDir": "./example/",
+    "includeFiles": ["Test1.proto", "Test2.proto"],
     "excludedFiles": [],
     "idFileConfigs": [
       {
-        "targetFile": "Example.proto",
+        "targetFile": "Test1.proto",
         "initId": 1001
       },
       {
-        "targetFile": "Example2.proto",
+        "targetFile": "Test2.proto",
         "initId": 2001
       }
     ]
@@ -25,10 +27,11 @@
   "outConfigs": [
     {
       "type": "java",
-      "tempPath": "java",
-      "finalPath": "",
+      "tempDir": "java",
+      "finalDir": "./finalDir/",
       "idFileFlag": true,
-      "idFilePath": "cn/kurisu9/example/PackId.java"
+      "idFilePath": "cn/kurisu9/example/PackId.java",
+      "idFileTemplate": "JavaPacketId.ftl"
     }
   ]
 
