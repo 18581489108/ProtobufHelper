@@ -11,7 +11,7 @@ public class ProtoConfig {
      *
      * 需要解析的proto文件都在这个根目录下，不支持子目录
      * */
-    private String srcPath;
+    private String srcDir;
 
     /**
      * 要生成代码的文件，如果为空，
@@ -29,12 +29,12 @@ public class ProtoConfig {
      * */
     private IdFileConfig[] idFileConfigs;
 
-    public String getSrcPath() {
-        return srcPath;
+    public String getSrcDir() {
+        return srcDir;
     }
 
-    public void setSrcPath(String srcPath) {
-        this.srcPath = srcPath;
+    public void setSrcDir(String srcDir) {
+        this.srcDir = srcDir;
     }
 
     public String[] getIncludeFiles() {

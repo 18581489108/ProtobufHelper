@@ -12,12 +12,17 @@ public class Config {
     private String protocFile;
 
     /**
-     * 输出的临时目录
+     * 代码模板所在目录
      * */
-    private String tempRootPath;
+    private String templateDir;
 
     /**
-     * 描述文件的输出目录，在输出的临时目录下
+     * 输出的临时目录
+     * */
+    private String tempRootDir;
+
+    /**
+     * 描述文件的输出路径，在输出的临时目录下
      * */
     private String descOutPath;
 
@@ -39,12 +44,12 @@ public class Config {
         this.protocFile = protocFile;
     }
 
-    public String getTempRootPath() {
-        return tempRootPath;
+    public String getTempRootDir() {
+        return tempRootDir;
     }
 
-    public void setTempRootPath(String tempRootPath) {
-        this.tempRootPath = tempRootPath;
+    public void setTempRootDir(String tempRootDir) {
+        this.tempRootDir = tempRootDir;
     }
 
     public String getDescOutPath() {
@@ -69,5 +74,13 @@ public class Config {
 
     public void setOutConfigs(OutConfig[] outConfigs) {
         this.outConfigs = outConfigs;
+    }
+
+    public String getTemplateDir() {
+        return templateDir;
+    }
+
+    public void setTemplateDir(String templateDir) {
+        this.templateDir = templateDir;
     }
 }

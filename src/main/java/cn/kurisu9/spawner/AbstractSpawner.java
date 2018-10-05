@@ -53,22 +53,22 @@ public abstract class AbstractSpawner implements Spawner {
             return new Result(false, "this spawner don't support " + outConfig.getType() + " type");
         }
 
-        Path tempPath = context.getTempRootPath().resolve(outConfig.getTempPath()).toAbsolutePath();
+        Path tempDir = context.getTempRootDir().resolve(outConfig.getTempDir()).toAbsolutePath();
 
-        Result createTempPathResult = createTempPath(tempPath);
+        Result createTempPathResult = createTempPath(tempDir);
         if (createTempPathResult.isFailed()) {
             return createTempPathResult;
         }
-        context.addTempPath(outConfig.getType(), tempPath);
+        context.addTempDir(outConfig.getType(), tempDir);
 
-        Result spawnFileResult = spawnFileToTempPath(context, outConfig, tempPath);
+        Result spawnFileResult = spawnFileToTempPath(context, outConfig, tempDir);
         if (spawnFileResult.isFailed()) {
             return spawnFileResult;
         }
 
         // 进行id文件的生成
         if (outConfig.getIdFileFlag()) {
-            Path idFilePath = tempPath.resolve(outConfig.getIdFilePath()).toAbsolutePath();
+            Path idFilePath = tempDir.resolve(outConfig.getIdFilePath()).toAbsolutePath();
             // 生成id文件的父目录
             Result createIdFileTempPathResult = createTempPath(idFilePath.getParent());
             if (createIdFileTempPathResult.isFailed()) {

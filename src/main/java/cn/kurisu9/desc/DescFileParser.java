@@ -47,7 +47,7 @@ public class DescFileParser {
      * */
     private Result spawnDescFiles() {
         String protocFile = context.getProtocFile().toAbsolutePath().toString();
-        String protoSrcPath = context.getProtoSrcPath().toAbsolutePath().toString();
+        String protoSrcPath = context.getProtoSrcDir().toAbsolutePath().toString();
 
         Path descOutPath = context.getDescOutPath();
         // 判断描述文件的父目录目录是否存在，不存在则创建

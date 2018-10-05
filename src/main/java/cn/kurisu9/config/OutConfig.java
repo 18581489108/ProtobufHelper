@@ -14,12 +14,12 @@ public class OutConfig {
     /**
      * 输出的临时目录
      * */
-    private String tempPath;
+    private String tempDir;
 
     /**
      * 输出的最终目录
      * */
-    private String finalPath;
+    private String finalDir;
 
     /**
      * 是否生成id文件
@@ -33,6 +33,11 @@ public class OutConfig {
      * */
     private String idFilePath;
 
+    /**
+     * id文件的模板
+     * */
+    private String idFileTemplate;
+
     public String getType() {
         return type;
     }
@@ -41,20 +46,20 @@ public class OutConfig {
         this.type = type;
     }
 
-    public String getTempPath() {
-        return tempPath;
+    public String getTempDir() {
+        return tempDir;
     }
 
-    public void setTempPath(String tempPath) {
-        this.tempPath = tempPath;
+    public void setTempDir(String tempDir) {
+        this.tempDir = tempDir;
     }
 
-    public String getFinalPath() {
-        return finalPath;
+    public String getFinalDir() {
+        return finalDir;
     }
 
-    public void setFinalPath(String finalPath) {
-        this.finalPath = finalPath;
+    public void setFinalDir(String finalDir) {
+        this.finalDir = finalDir;
     }
 
     public boolean getIdFileFlag() {
@@ -71,5 +76,13 @@ public class OutConfig {
 
     public void setIdFilePath(String idFilePath) {
         this.idFilePath = idFilePath;
+    }
+
+    public String getIdFileTemplate() {
+        return idFileTemplate;
+    }
+
+    public void setIdFileTemplate(String idFileTemplate) {
+        this.idFileTemplate = idFileTemplate;
     }
 }

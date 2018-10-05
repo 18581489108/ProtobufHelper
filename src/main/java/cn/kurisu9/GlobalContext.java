@@ -25,17 +25,22 @@ public class GlobalContext {
     private Path protocFile;
 
     /**
+     * 模板所在目录
+     * */
+    private Path templateDir;
+
+    /**
      * 临时输出的根目录
      * */
-    private Path tempRootPath;
+    private Path tempRootDir;
 
     /**
-     * proto文件的源路径
+     * proto文件的源目录
      * */
-    private Path protoSrcPath;
+    private Path protoSrcDir;
 
     /**
-     * 描述文件输出目录
+     * 描述文件输出路径
      * */
     private Path descOutPath;
 
@@ -50,19 +55,43 @@ public class GlobalContext {
      * key: type 生成器的类型
      * value: Path 生成器输出文件的临时目录
      * */
-    private Map<String, Path> tempPaths = new HashMap<>();
+    private Map<String, Path> tempDirs = new HashMap<>();
+
+    /**
+     * 最终目录的映射表
+     *
+     * key: type 生成器的类型
+     * value: Path 最终输出到的目录
+     * */
+    private Map<String, Path> finalDirs = new HashMap<>();
 
     /**
      * id文件相关数据
      * */
     private List<ProtoFileData> idFileDataList;
 
-    public void addTempPath(String key, Path tempPath) {
-        tempPaths.put(key, tempPath);
+    public void addTempDir(String spawnerType, Path tempDir) {
+        tempDirs.put(spawnerType.toLowerCase(), tempDir);
     }
 
-    public Path removeTempPath(String key) {
-        return tempPaths.remove(key);
+    public Path removeTempDir(String spawnerType) {
+        return tempDirs.remove(spawnerType);
+    }
+
+    public Path getTempDir(String spawnerType) {
+        return tempDirs.get(spawnerType.toLowerCase());
+    }
+
+    public void addFinalDir(String spawnerType, Path tempDir) {
+        finalDirs.put(spawnerType.toLowerCase(), tempDir);
+    }
+
+    public Path removeFinalDir(String spawnerType) {
+        return finalDirs.remove(spawnerType);
+    }
+
+    public Path getFinalDir(String spawnerType) {
+        return finalDirs.get(spawnerType.toLowerCase());
     }
 
     //region getter/setter
@@ -82,20 +111,20 @@ public class GlobalContext {
         this.protocFile = protocFile;
     }
 
-    public Path getTempRootPath() {
-        return tempRootPath;
+    public Path getTempRootDir() {
+        return tempRootDir;
     }
 
-    public void setTempRootPath(Path tempRootPath) {
-        this.tempRootPath = tempRootPath;
+    public void setTempRootDir(Path tempRootDir) {
+        this.tempRootDir = tempRootDir;
     }
 
-    public Path getProtoSrcPath() {
-        return protoSrcPath;
+    public Path getProtoSrcDir() {
+        return protoSrcDir;
     }
 
-    public void setProtoSrcPath(Path protoSrcPath) {
-        this.protoSrcPath = protoSrcPath;
+    public void setProtoSrcDir(Path protoSrcDir) {
+        this.protoSrcDir = protoSrcDir;
     }
 
     public List<String> getProtoFiles() {
@@ -120,6 +149,14 @@ public class GlobalContext {
 
     public void setIdFileDataList(List<ProtoFileData> idFileDataList) {
         this.idFileDataList = idFileDataList;
+    }
+
+    public Path getTemplateDir() {
+        return templateDir;
+    }
+
+    public void setTemplateDir(Path templateDir) {
+        this.templateDir = templateDir;
     }
 
     //endregion
