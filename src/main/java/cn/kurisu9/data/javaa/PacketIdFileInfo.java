@@ -6,7 +6,7 @@ import cn.kurisu9.data.ProtoMessageData;
 import java.util.List;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description 消息id文件的信息
  * @date 2018/10/5 14:45
  **/

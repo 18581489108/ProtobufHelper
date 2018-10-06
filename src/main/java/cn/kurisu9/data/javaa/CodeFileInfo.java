@@ -1,7 +1,7 @@
 package cn.kurisu9.data.javaa;
 
 /**
- * @author zhaoxin_m
+ * @author kurisu9
  * @description java代码文件的信息
  * @date 2018/10/5 14:39
  **/
