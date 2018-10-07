@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  * @date 2018/10/1 20:28
  **/
 public class Test {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         /*
         Path path = Paths.get("C:\\Users\\kurisu9\\Desktop\\protobuf\\test\\protoc3.5.1.exe");
         System.out.println(Files.isDirectory(path));
@@ -27,6 +27,13 @@ public class Test {
             System.out.println(path.getName(i));
         }
         */
-        System.out.println(FilenameUtils.getBaseName("cn/kurisu9/example/PackId.java"));
+        //System.out.println(FilenameUtils.getBaseName("cn/kurisu9/example/PackId.java"));
+        Runtime runtime = Runtime.getRuntime();
+
+        Process process = runtime.exec("cmd /c pbjs -help");
+
+        process.waitFor();
+
+        System.out.println(process.exitValue());
     }
 }
