@@ -12,6 +12,16 @@ public class Config {
     private String protocFile;
 
     /**
+     * 编译成js文件的工具路径
+     * */
+    private String pbjsFile;
+
+    /**
+     * 编译生成ts声明文件的工具路径
+     * */
+    private String pbtsFile;
+
+    /**
      * 代码模板所在目录
      * */
     private String templateDir;
@@ -42,6 +52,22 @@ public class Config {
 
     public void setProtocFile(String protocFile) {
         this.protocFile = protocFile;
+    }
+
+    public String getPbjsFile() {
+        return pbjsFile;
+    }
+
+    public void setPbjsFile(String pbjsFile) {
+        this.pbjsFile = pbjsFile;
+    }
+
+    public String getPbtsFile() {
+        return pbtsFile;
+    }
+
+    public void setPbtsFile(String pbtsFile) {
+        this.pbtsFile = pbtsFile;
     }
 
     public String getTempRootDir() {

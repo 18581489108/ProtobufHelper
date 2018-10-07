@@ -2,6 +2,10 @@
 
   "protocFile": "./tools/protoc3.5.1.exe",
 
+  "pbjsFile": "cmd /c pbjs",
+
+  "pbtsFile": "cmd /c pbts",
+
   "templateDir": "./templates",
 
   "tempRootDir": "./build",
@@ -28,10 +32,18 @@
     {
       "type": "java",
       "tempDir": "java",
-      "finalDir": "./finalDir/",
+      "finalDir": "./finalDir/java/",
       "idFileFlag": true,
       "idFilePath": "cn/kurisu9/example/PackId.java",
       "idFileTemplate": "JavaPacketId.ftl"
+    },
+    {
+      "type": "typescript",
+      "tempDir": "ts",
+      "finalDir": "./finalDir/ts/",
+      "idFileFlag": true,
+      "idFilePath": "message/packId.ts",
+      "idFileTemplate": "TypeScriptPacketId.ftl"
     }
   ]
 

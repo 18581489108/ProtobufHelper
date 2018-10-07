@@ -2,6 +2,7 @@ package cn.kurisu9.utils.process;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author kurisu9
@@ -29,29 +30,25 @@ public class Command {
     }
 
     /**
-     * 转换为执行语句
-     * */
-    public String toExecStatement() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(cmd);
-
-        for (String param : params) {
-            sb.append(' ');
-            sb.append(param);
-        }
-
-        return sb.toString();
-    }
-
-    /**
      * 将命令和参数转换为一个list
      * */
     public List<String> toCmdList() {
-        List<String> cmdList = new ArrayList<>(params.size() + 1);
-        cmdList.add(cmd);
-        cmdList.addAll(params);
+        List<String> cmdList = new ArrayList<>(params.size() + 3);
+
+        addParamsToList(cmdList, cmd);
+
+        for (String param : params) {
+            addParamsToList(cmdList, param);
+        }
+
         return cmdList;
+    }
+
+    private void addParamsToList(List<String> cmdList, String param) {
+        StringTokenizer st = new StringTokenizer(param);
+        while (st.hasMoreTokens()) {
+            cmdList.add(st.nextToken());
+        }
     }
 
     public void addParam(String param) {

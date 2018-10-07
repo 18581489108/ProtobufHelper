@@ -168,9 +168,13 @@ public class App {
 
         addProtoConfigToContext(context, config.getProtoConfig());
 
+        /*
         Path protocFile = Paths.get(config.getProtocFile());
         checkFilePath("protoc", protocFile);
-        context.setProtocFile(protocFile);
+        */
+        context.setProtocFile(config.getProtocFile());
+        context.setPbjsFile(config.getPbjsFile());
+        context.setPbtsFile(config.getPbtsFile());
 
         Path tempRootPath = Paths.get(config.getTempRootDir());
         checkPath("temp root path", tempRootPath);

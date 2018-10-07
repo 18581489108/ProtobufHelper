@@ -22,7 +22,17 @@ public class GlobalContext {
     /**
      * 编译proto文件的工具
      * */
-    private Path protocFile;
+    private String protocFile;
+
+    /**
+     * 编译成js文件的工具路径
+     * */
+    private String pbjsFile;
+
+    /**
+     * 编译生成ts声明文件的工具路径
+     * */
+    private String pbtsFile;
 
     /**
      * 模板所在目录
@@ -103,12 +113,28 @@ public class GlobalContext {
         this.config = config;
     }
 
-    public Path getProtocFile() {
+    public String getProtocFile() {
         return protocFile;
     }
 
-    public void setProtocFile(Path protocFile) {
+    public void setProtocFile(String protocFile) {
         this.protocFile = protocFile;
+    }
+
+    public String getPbjsFile() {
+        return pbjsFile;
+    }
+
+    public void setPbjsFile(String pbjsFile) {
+        this.pbjsFile = pbjsFile;
+    }
+
+    public String getPbtsFile() {
+        return pbtsFile;
+    }
+
+    public void setPbtsFile(String pbtsFile) {
+        this.pbtsFile = pbtsFile;
     }
 
     public Path getTempRootDir() {
