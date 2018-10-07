@@ -46,7 +46,7 @@ public class DescFileParser {
      * 生成描述文件
      * */
     private Result spawnDescFiles() {
-        String protocFile = context.getProtocFile().toAbsolutePath().toString();
+        String protocFile = context.getProtocFile();
         String protoSrcPath = context.getProtoSrcDir().toAbsolutePath().toString();
 
         Path descOutPath = context.getDescOutPath();

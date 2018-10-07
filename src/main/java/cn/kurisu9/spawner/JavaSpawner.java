@@ -14,21 +14,15 @@ import cn.kurisu9.utils.process.Command;
 import cn.kurisu9.utils.process.ExecResult;
 import cn.kurisu9.utils.process.ProcessUtils;
 import com.google.protobuf.DescriptorProtos;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static cn.kurisu9.utils.CodeSpawnUtils.*;
 
 /**
  * @author kurisu9
@@ -48,7 +42,7 @@ public class JavaSpawner extends AbstractSpawner {
      */
     @Override
     protected Result spawnFileToTempPath(GlobalContext context, OutConfig outConfig, Path tempPath) {
-        String protocFile = context.getProtocFile().toAbsolutePath().toString();
+        String protocFile = context.getProtocFile();
         String srcPath = context.getProtoSrcDir().toAbsolutePath().toString();
         String javaOutPath = tempPath.toString();
 
@@ -89,7 +83,7 @@ public class JavaSpawner extends AbstractSpawner {
         Set<String> imports = new HashSet<>();
         for (ProtoFileData fileData : fileDataList) {
             DescriptorProtos.FileOptions fileOptions = fileData.getFileOptions();
-
+            
             String javaOuterClassname = getJavaOuterClassname(fileData.getFileName(), fileOptions);
             String fullClassName = fileOptions.getJavaPackage() + "." + javaOuterClassname;
 

@@ -18,6 +18,9 @@ public class Spawners {
     static {
         JavaSpawner javaSpawner = new JavaSpawner();
         spawnerMap.put(javaSpawner.getSupportsType(), javaSpawner);
+
+        TypeScriptSpawner typeScriptSpawner = new TypeScriptSpawner();
+        spawnerMap.put(typeScriptSpawner.getSupportsType(), typeScriptSpawner);
     }
 
 
